@@ -12,34 +12,29 @@ class Window
 {
 	constructor()
 	{
-		this.mouse = new Object();
-		this.mouse.x = 0;
-		this.mouse.y = 0;
-		this.mouse.dragging = false;
 	}
 
 	bindToDiv(div)
 	{
 		this.window = div;
+		this.window.left = 0;
+		this.window.top = 0;
 		this.window.addEventListener("mousedown", (event) => {
-			this.mouse.dragging = true;
-			this.dragHandler.call(this);
+			this.window.prevX = event.x;
+			this.window.prevY = event.y;
+			this.window.addEventListener("mousemove", this.dragHandler);
 		});
 		window.addEventListener("mouseup", (event) => {
-			this.mouse.dragging = false;
-		});
-		window.addEventListener("mousemove", (event) => {
-			this.mouse.x = event.x;
-			this.mouse.y = event.y;
+			this.window.removeEventListener("mousemove", this.dragHandler);
 		});
 	}
 
-	dragHandler()
+	dragHandler(event)
 	{
-		this.window.style.left = this.mouse.x;
-		this.window.style.top = this.mouse.y;
-
-		if (this.mouse.dragging)
-			setTimeout(() => {this.dragHandler.call(this);}, 16); // 16ms is about 60 fps
+		event.target.style.left = event.target.offsetLeft + (event.x - event.target.prevX);
+		event.target.style.top = event.target.offsetTop + (event.y - event.target.prevY);
+		
+		event.target.prevX = event.x;
+		event.target.prevY = event.y;
 	}
 }
