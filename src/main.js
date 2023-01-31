@@ -63,3 +63,5 @@ class ToolBar extends EventTarget
 		}
 	}
 }
+
+export { Window, ToolBar };
