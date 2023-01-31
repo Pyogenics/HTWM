@@ -38,3 +38,28 @@ class Window
 		event.target.prevY = event.y;
 	}
 }
+
+class ToolBar extends EventTarget
+{
+	constructor()
+	{
+		super();
+	}
+
+	bindToDiv(div)
+	{
+		this.toolbar = div;
+	}
+
+	bindActions(actions)
+	{
+		for (const [id, action] of Object.entries(actions))
+		{
+			const element = document.getElementById(id); //XXX: We don't know if the element is under us, do we care?
+			if (element === null) throw new Error(`Unknow element id: "${id}"`);
+			element.addEventListener("click", (event) => {
+				this.dispatchEvent(new Event(action));
+			});
+		}
+	}
+}
